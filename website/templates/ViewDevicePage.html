@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard-style.css') }}">
+	<title>View Device - {{ CUser['organization'] }} - {{ Device['name'] }} </title>
+	<style type="text/css">
+		:root{
+			--main-bg: ghostwhite ;
+			--main-button-bg: mediumpurple ;
+			--main-button-text: white ;
+			--main-text: black ;
+			--light-purple: #dfc8e4;
+		}
+	</style>
+</head>
+<body>
+	<!-- Modals -->
+
+	<div class="new-modal" id="onboard_request_Modal">
+		<div class="modal-content">
+			<span class="md-close" id="md-closeModal-req">&times;</span>
+			<h1>Request Maintenance</h1>
+
+			<form class="onboard-form" action="/request-maintainence" method="POST">
+				<input type="hidden" value="{{ Device['device_uid'] }}" name="device_uid">
+				<br>
+				<textarea style="border-radius: 10px;" placeholder="What happened to your device? Describe" name="description"></textarea>
+
+				<h3>Where do you want maintenance?</h3>
+				<br>
+				<select name="request_section">
+					<option value="Hardware">Hardware - Screens, Keyboard, Mouse, Touchpad e.t.c.</option>
+					<option value="Software">Software - Operating System, BSOD, Crashing, Not Responding</option>
+					<option value="Not Sure">Not sure</option>
+				</select>
+				<br>
+				<h3>Maintenance Priority</h3>
+				<select name="request_priority">
+					<option>High</option>
+					<option>Medium</option>
+					<option>Low</option>
+				</select>
+				<br>
+				<button class="main-button" style="width: 80%;">Request</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- End of modals -->
+
+	<nav class="body-nav">
+		<div class="logo">
+			<img src="#">
+		</div>
+		<div class="pages-trigger">
+			<div id="SCM-HOME" class="active-page-trigger"><img src="#"> Device &nbsp;- &nbsp;<b>{{ Device['name'] }}</b> </div>
+		</div>
+	</nav>
+	<main id="SCM-HOME-SCREEN" class="screens active-screen">
+		
+		<img src="#">
+		
+		<div>
+			<h4 align="center">Hey <b class="special-text-1">{{ CUser['email'] }}</b>, this is one of your device <b class="special-text-1">{{ Device['name'] }}</b> </h4>
+		</div>
+
+		<hr>
+
+		<button class="main-button" id="onboard-request-button">Request Maintenance</button>
+
+		<h2>Device Maintenance Requests</h2>
+		<ul class="table-container">
+			{% if Requests %}
+				{% for Request in Requests %}
+					<li class="table-cell">{{ GetDBItem("DeviceITSA", "device_uid", Request['device_id'])['name'] }}
+						<div>{{ Request['priority'] }}</div> 
+						<div>{{ GetDBItem("UserITSA", "id", Request['user_id'])['email'] }}</div>
+						<div>
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/edit-request/{{ Request['id'] }}">Edit</a></button> 
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/delete-request/{{ Request['id'] }}">Delete</a></button>
+						</div>
+					</li>
+				{% endfor %}
+			{% else %}
+				<p align="center">No Requests for now!</p>
+			{% endif %}
+		</ul>
+
+	</main>
+
+<script>
+	const Onboard_Device_Modal = document.querySelector('#onboard_request_Modal');
+	document.querySelector('#onboard-request-button').addEventListener('click', ()=> { Onboard_Device_Modal.style.display = 'block'});
+	document.querySelector('#md-closeModal-req').addEventListener('click', ()=> { Onboard_Device_Modal.style.display = 'none'}); 
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard-style.css') }}">
+	<title>Connect Device - {{ Device['name'] }} </title>
+	<style type="text/css">
+		:root{
+			--main-bg: ghostwhite ;
+			--main-button-bg: mediumpurple ;
+			--main-button-text: white ;
+			--main-text: black ;
+			--light-purple: #dfc8e4;
+		}
+	</style>
+</head>
+<body>
+	<!-- Modals -->
+
+	<div class="new-modal" id="onboard_connect_Modal">
+		<div class="modal-content">
+			<span class="md-close" id="md-closeModal-cnt">&times;</span>
+			<h1>Connect Device</h1>
+
+			<p align="left">To connect a device, you'll have to download the <b>PixelByte</b> driver which will feed device information over the internet to your dashboard.</p>
+			<ol>
+				<li>Download the PixelByte Feed</li>
+				<li>Launch the PixelByte Feeder</li>
+				<li>Paste your Device ID in the input bar</li>
+				<li>Click 'Feed Information'</li>
+			</ol>
+			<br>
+			<br>
+			<br>
+			<h3>Device ID</h3>
+			<input type="text" id="InputBox" value="{{ Device['device_uid'] }}" style="width: 80%; cursor: copy;" disabled>
+			<button class="main-button" style="width: 80%;"><a style="text-decoration: none; color: white;" href="{{ url_for('static', filename='_UM_/PixelByte/PixelByteFeed.exe') }}" download> Download Driver - PixelByte Feed </a></button>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<h1>Test Connection</h1>
+			<form action="/test-connection/{{ Device['device_uid'] }}" method="GET">
+				<input type="hidden" value="{{ Device['device_uid'] }}" name="device_uid">
+				<br>
+				<br>
+				<p>Connection Status: <span>{{ test_results }}</span></p>
+				<button class="main-button" style="width: 80%;">Test Connection</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- End of modals -->
+
+	<nav class="body-nav">
+		<div class="logo">
+			<img src="#">
+		</div>
+		<div class="pages-trigger">
+			<div id="SCM-HOME" class="active-page-trigger"><img src="#"> Connect Device</div>
+		</div>
+	</nav>
+	<main id="SCM-HOME-SCREEN" class="screens active-screen">
+		
+		<img src="#">
+		
+		<div>
+			<h4 align="center">Hey <b class="special-text-1">{{ CUser['email'] }}</b>, this is your Dashboard</h4>
+		</div>
+
+		<hr>
+
+		<button class="main-button" id="onboard-connect-button">Connect Device</button>
+
+	</main>
+	
+<script>
+	const Onboard_Device_Modal = document.querySelector('#onboard_connect_Modal');
+	document.querySelector('#onboard-connect-button').addEventListener('click', ()=> { Onboard_Device_Modal.style.display = 'block'});
+	document.querySelector('#md-closeModal-cnt').addEventListener('click', ()=> { Onboard_Device_Modal.style.display = 'none'}); 
+</script>
+</body>
+</html>

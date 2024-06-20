@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Organization Requests - {{ GetDBItem("UserITSA", "id", Request['user_id'])['email'] }} - {{ GetDBItem("DeviceITSA", "device_uid", Request['device_id'])['name'] }} </title>
+	<style type="text/css">
+		:root{
+			--main-bg: ghostwhite ;
+			--main-button-bg: mediumpurple ;
+			--main-button-text: white ;
+			--main-text: black ;
+			--light-purple: #dfc8e4;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard-style.css') }}">
+
+</head>
+<body>
+	<nav class="body-nav">
+		<div class="logo">
+			<img src="#">
+		</div>
+		<div class="pages-trigger">
+			<div id="SCM-HOME" class="active-page-trigger"><img src="#"> Maintenance Request </div>
+		</div>
+	</nav>
+	<main id="SCM-HOME-SCREEN" class="screens active-screen">
+		
+		<img src="#">
+		
+		<div>
+			<h2 align="center">Maintenance Requests</h2>
+
+			<h4>Request by <b class="special-text-1">{{ GetDBItem("UserITSA", "id", Request['user_id'])['email'] }}</b> for device <b class="special-text-1">{{ GetDBItem("DeviceITSA", "device_uid", Request['device_id'])['name'] }}</b></h4>
+		</div>
+
+		<hr>
+		<form class="onboard-form" style="display: grid;" action="/edit-request-priority" method="POST">
+			<div style="display: flex; align-items: center; justify-content: space-between;">
+				<h5>Maintenance Priority</h5>
+				<input type="hidden" name="req_id" value="{{ Request['id'] }}">
+				<select name="new_priority">
+					<option value="{{ (Request['priority']).lower() }}">Currently set to {{ (Request['priority']).lower() }}</option>
+					<option value="high">Set to High</option>
+					<option value="low">Set to Low</option>
+					<option value="medium">Set to Medium</option>
+				</select>
+			</div>
+			<button class="main-button" id="onboard-request-button">Edit Priority</button>
+		</form>
+
+		<ul class="table-container">
+			{% if Request %}
+				<li class="table-cell">{{ GetDBItem("DeviceITSA", "device_uid", Request['device_id'])['name'] }}
+					<div>{{ Request['priority'] }}</div> 
+					<div>{{ GetDBItem("UserITSA", "id", Request['user_id'])['email'] }}</div>
+					<div>
+						<button style="display: none;"><a style="color: var(--main-text); text-decoration: none;" href="/edit-request/{{ Request['id'] }}">Edit</a></button> 
+						<button><a style="color: var(--main-text); text-decoration: none;" href="/delete-request/{{ Request['id'] }}">Delete</a></button>
+					</div>
+				</li>
+			{% else %}
+				<p align="center">No Requests for now!</p>
+			{% endif %}
+		</ul>
+
+	</main>
+</body>
+</html>

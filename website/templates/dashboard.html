@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ITSA-DCM • Dashboard</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard-style.css') }}">
+	<style type="text/css">
+		:root{
+			--main-bg: {{ AppTheme["Main Background"]  }} ;
+			--main-button-bg: {{ AppTheme["Button Background"]  }} ;
+			--main-button-text: {{ AppTheme["Button Text"]  }} ;
+			--main-text: {{ AppTheme["Main Text"]  }} ;
+			--light-purple: #dfc8e4;
+		}
+	</style>
+</head>
+<body>
+	<!-- MODAL BOX(ES) -->
+	<div class="new-modal" id="onboard_Organization_Modal">
+		<div class="modal-content">
+			<span class="md-close" id="md-closeModal-org">&times;</span>
+			<h1>Onboard Organization</h1>
+
+			<form class="onboard-form" action="/onboard-organization" method="POST">
+				<h3>Organization Information</h3>
+				<input type="text" name="Organization_Name" placeholder="Organization Name" required><br>
+				<select name="Organization_Sector" required>
+					<option value="None">Select Industry Sector</option>
+					<option>Technology</option>
+					<option>Healthcare</option>
+					<option>Finance</option>
+					<option>Retail</option>
+					<option>Manufacturing</option>
+					<option>Energy</option>
+					<option>Media</option>
+					<option>Transportation</option>
+					<option>Real Estate</option>
+					<option>Education</option>
+				</select><br>
+				<input type="number" name="Organization_Staff_Count" placeholder="Organization Staff Count" required><br>
+				<hr>
+				<h3>Contact Information</h3>
+				<input type="email" name="Organization_Email" placeholder="Organization Email Address" required><br>
+				<input type="text" name="Organization_Location" placeholder="Organization Physical Address" required><br>
+				<input type="number" name="Organization_Phone_Number" placeholder="Organization Phone Number" required><br>
+				<hr>
+				<h3>Additional Metadata <small>(optional)</small></h3>
+				<input type="url" name="Organization_Website" placeholder="Organization Website Address"><br>
+				<input type="url" name="Organization_Socials_1" placeholder="Organization Social Handle 1"><br>
+				<input type="url" name="Organization_Socials_2" placeholder="Organization Social Handle 2"><br>
+
+				<button class="main-button" style="width: 80%;">+ Onboard</button>
+			</form>
+		</div>
+	</div>
+
+	<div class="new-modal" id="onboard_technician_Modal">
+		<div class="modal-content">
+			<span class="md-close" id="md-closeModal-tch">&times;</span>
+			<h1>Onboard Technician</h1>
+
+			<form class="onboard-form" action="/onboard-technician" method="POST">
+				<h3>Technician Information</h3>
+				<input type="text" name="Technician_Name" placeholder="Technician Name" required><br>
+				<select name="Technician_Skillset" required>
+					<option value="None">Select Skill</option>
+					<option>Hardware</option>
+					<option>Software</option>
+					<option>Both</option>
+				</select><br>
+				<input type="number" name="Technician_Years_of_Proficiency" placeholder="Technician Technician Years of Proficiency" required><br>
+				<hr>
+				<h3>Contact Information</h3>
+				<input type="email" name="Technician_Email" placeholder="Technician Email Address" required><br>
+				<input type="text" name="Technician_Location" placeholder="Technician Physical Address" required><br>
+				<input type="number" name="Technician_Phone_Number" placeholder="Technician Phone Number" required><br>
+
+				<button class="main-button" style="width: 80%;">+ Onboard</button>
+			</form>
+		</div>
+	</div>
+
+	<div class="new-modal" id="onboard_device_Modal">
+		<div class="modal-content">
+			<span class="md-close" id="md-closeModal-dvc">&times;</span>
+			<h1>Add a Device</h1>
+
+			<form class="onboard-form" action="/add-device" method="POST">
+				<h3>Device Information</h3>
+
+				<input type="hidden" name="user_email" value="{{ CUser['email'] }}">
+				<input type="text" name="Device_Name" placeholder="Name this device e.g. Device1" required><br>
+				<select name="Device_category" required>
+					<option value="None">Select Device Category</option>
+					<option>Desktop</option>
+					<option>Laptop</option>
+				</select><br>
+				<input type="number" name="Device_dob" placeholder="How long have you had this device? (months)" required><br><br>
+				<div><h3>Last time device was maintained? <small>(leave empty if never maintained)</small></h3> <br> <input type="date" name="Device_last_maintained"><br></div>
+
+
+				<button class="main-button" style="width: 80%;">+ Add</button>
+			</form>
+		</div>
+	</div>
+
+	<div class="new-modal" id="onboard_staff_Modal">
+		<div class="modal-content">
+			<span class="md-close" id="md-closeModal-stf">&times;</span>
+			<h1>Onboard Staff</h1>
+
+			<form class="onboard-form" action="/onboard-staff" method="POST">
+				<h3>Staff Information</h3>
+				<input type="text" name="Staff_Name" placeholder="Staff Name" required><br>
+				<input type="text" name="Staff_job_title" placeholder="Staff Job Title" required><br>
+				<select name="Staff_department" required>
+					<option value="None">Select Department</option>
+					<option>Human Resources</option>
+					<option>Finance</option>
+					<option>Marketing</option>
+					<option>Sales</option>
+					<option>Operations</option>
+					<option>Information Technology</option>
+					<option>Research and Development</option>
+					<option>Legal</option>
+					<option>Procurement</option>
+					<option>Customer Service</option>
+					<option>Supply Chain Management</option>
+					<option>Quality Assurance</option>
+					<option>Administration</option>
+					<option>Communication</option>
+					<option>Strategy</option>
+				</select><br>
+				<input type="number" name="Staff_working_hours" placeholder="Staff working hours" required><br>
+				<hr>
+				<h3>Contact Information</h3>
+				<input type="email" name="Staff_Email" placeholder="Staff Email Address" required><br>
+				<input type="text" name="Staff_Location" placeholder="Staff Physical Address" required><br>
+				<input type="number" name="Staff_Phone_Number" placeholder="Staff Phone Number" required><br>
+
+				<button class="main-button" style="width: 80%;">+ Onboard</button>
+			</form>
+		</div>
+	</div>
+	<!-- END OF MODAL BOX(ES) -->
+
+	<nav class="body-nav">
+		<div class="logo">
+			<img src="#">
+		</div>
+		<div class="pages-trigger">
+			<div id="SCM-HOME" class="active-page-trigger"><img src="#"> Home</div>
+			<div id="SCM-ORGANIZATION"><img src="#"> Organizations</div>
+			<div id="SCM-TECHNICIANS"><img src="#"> Technicians</div>
+			<div id="SCM-DEVICE"><img src="#"> Your Device</div>
+			<div id="SCM-REQUESTS"><img src="#"> Requests</div>
+			<div id="SCM-MANAGE-STAFFS"><img src="#"> Staffs</div>
+			<div><a style="text-decoration: none;" href="/logout"><img src="#"></a></div>
+
+			{% if CUser['privilege'] == 'admin' %}
+				<script type="text/javascript">
+					document.querySelector("#SCM-ORGANIZATION").style.display = 'none'
+					document.querySelector("#SCM-TECHNICIANS").style.display = 'none'
+				</script>
+			
+			{% elif CUser['privilege'] == 'super_admin' %}
+				<script type="text/javascript">
+					document.querySelector("#SCM-DEVICE").style.display = 'none'
+					document.querySelector("#SCM-REQUESTS").style.display = 'none'
+					document.querySelector("#SCM-MANAGE-STAFFS").style.display = 'none'
+				</script>
+			{% else %}
+				<script type="text/javascript">
+					document.querySelector("#SCM-ORGANIZATION").style.display = 'none'
+					document.querySelector("#SCM-TECHNICIANS").style.display = 'none'
+					document.querySelector("#SCM-MANAGE-STAFFS").style.display = 'none'
+					// document.querySelector("#SCM-REQUESTS").style.display = 'none'
+				</script>
+			{% endif %}
+		</div>
+	</nav>
+	<main id="SCM-HOME-SCREEN" class="screens active-screen">
+		<img src="#">
+		<div>
+			<h4 align="center">Hey <b class="special-text-1">{{ CUser['email'] }}</b>, this is your Dashboard</h4>
+			{% if CUser['privilege'] == 'super_admin' %}
+				<h5 align="center"><b class="special-text-1">{{ LengthFunc(Organizations) }}</b> Organizations &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; <b class="special-text-1">{{ LengthFunc(Technicians) }}</b> Technicians</h5>
+			{% elif CUser['privilege'] == 'admin' %}
+				<h5 align="center"><b class="special-text-1">{{ the_Organization['staff_count'] }}</b> Staffs &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; <b class="special-text-1">{{ GetAdminCount(the_Organization['id']) }}</b> Admins</h5>
+			{% else %}
+				{{ pass}}
+			{% endif %}
+		</div>
+	</main>
+	<main id="SCM-TECHNICIANS-SCREEN" class="screens">
+		<header style="display: grid; place-items: center; height: 200px;">
+			<img src="#">
+			<button id="onboard-technician-button" class="main-button">&plus; Onboard a Technician</button>
+		</header>
+		<div class="hr">&nbsp;</div>
+		<h2>Onboarded Technicians</h2>
+		<ul class="table-container">
+			{% if Technicians %}
+				{% for Technician in Technicians %}
+					<li class="table-cell">{{ Technician['name'] }}
+						<div>{{ Technician['yop'] }} Years</div> 
+						<div>{{ Technician['address'] }}</div>
+						<div>
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/view-technician/{{ Technician['id'] }}">View</a></button> 
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/remove-technician/{{ Technician['id'] }}">Remove</a></button>
+						</div>
+					</li>
+				{% endfor %}
+			{% else %}
+				<p align="center">No Technicians for now!</p>
+			{% endif %}
+		</ul>
+	</main>
+	<main id="SCM-ORGANIZATIONS-SCREEN" class="screens">
+		<header style="display: grid; place-items: center; height: 200px;">
+			<img src="#">
+			<button id="onboard-organization-button" class="main-button">&plus; Onboard an Organization</button>
+		</header>
+		<div class="hr">&nbsp;</div>
+		<h2>Onboarded Organizations</h2>
+		<ul class="table-container">
+			{% if Organizations %}
+				{% for Organization in Organizations %}
+					<li class="table-cell">{{ Organization['name'] }}
+						<div>{{ Organization['staff_count'] }} Staffs</div> 
+						<div>{{ GetAdminCount(Organization['id']) }} Admins</div>
+						<div>
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/view-organization/{{ Organization['id'] }}">View</a></button> 
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/remove-organization/{{ Organization['id'] }}">Remove</a></button>
+						</div>
+					</li>
+				{% endfor %}
+			{% else %}
+				<p align="center">No Organizations for now!</p>
+			{% endif %}
+		</ul>
+	</main>
+	<main id="SCM-DEVICE-SCREEN" class="screens">
+		<header style="display: grid; place-items: center; height: 200px;">
+			<img src="#">
+			<button id="onboard-device-button" class="main-button">&plus; Add a Device</button>
+		</header>
+		<div class="hr">&nbsp;</div>
+		{% if CUser['privilege'] == "admin" %}
+			<h2>Organization Devices</h2>
+			<ul class="table-container">
+				{% if Devices %}
+					{% for Device in Devices %}
+						<li class="table-cell">{{ Device['name'] }}
+							<div>{{ Device['device_uid'] }} </div> 
+							{% if GetDeviceStatus(Device['device_uid']) == "Online" %}
+								<div style="background: #57fb6c; color: #0b5406; padding: 5px; border-radius: 10px;">Online</div>
+							{% elif GetDeviceStatus(Device['device_uid']) == "Offline" %}
+								<div style="background: #fb5757; color: #540606; border-radius: 10px; padding: 5px;">Offline</div>
+							{% else %}
+								<div style="background: #7a7676; color: #000000; border-radius: 10px; padding: 5px;">Not Connected</div>
+							{% endif %}
+							<div>
+								{% if GetDeviceStatus(Device['device_uid']) == "Not Connected" %}
+									<button style="opacity: 0.8;" disabled>&nbsp;&nbsp;&nbsp;View&nbsp;&nbsp;</button> 
+								{% else %}
+									<button><a style="color: var(--main-text); text-decoration: none;" href="/device/{{ Device['device_uid'] }}">&nbsp;&nbsp;&nbsp;View&nbsp;&nbsp;</a></button> 
+								{% endif %}
+								<button><a style="color: var(--main-text); text-decoration: none;" href="/remove-device/{{ Device['device_uid'] }}">Remove</a></button>
+							</div>
+						</li>
+					{% endfor %}
+				{% else %}
+					<p align="center">No Devices for now!</p>
+				{% endif %}
+			</ul>
+		{% elif CUser['privilege'] == "staff" %}
+			<h2>Added Devices</h2>
+			<ul class="table-container">
+				{% if MyDevices %}
+					{% for Device in MyDevices %}
+						<li class="table-cell">{{ Device['name'] }}
+							<div>{{ Device['device_uid'] }} </div> 
+							{% if GetDeviceStatus(Device['device_uid']) == "Online" %}
+								<div style="background: #57fb6c; color: #0b5406; padding: 5px; border-radius: 10px;">Online</div>
+							{% elif GetDeviceStatus(Device['device_uid']) == "Offline" %}
+								<div style="background: #fb5757; color: #540606; border-radius: 10px; padding: 5px;">Offline</div>
+							{% else %}
+								<div style="background: #7a7676; color: #000000; border-radius: 10px; padding: 5px;">Not Connected</div>
+							{% endif %}
+							<div>
+								{% if GetDeviceStatus(Device['device_uid']) == "Not Connected" %}
+									<button><a style="color: var(--main-text); text-decoration: none;" href="/connect-device/{{ Device['device_uid'] }}">Connect</a></button> 
+								{% else %}
+									<button><a style="color: var(--main-text); text-decoration: none;" href="/device/{{ Device['device_uid'] }}">&nbsp;&nbsp;&nbsp;View&nbsp;&nbsp;</a></button> 
+								{% endif %}
+								<button><a style="color: var(--main-text); text-decoration: none;" href="/remove-device/{{ Device['device_uid'] }}">Remove</a></button>
+							</div>
+						</li>
+					{% endfor %}
+				{% else %}
+					<p align="center">No Devices for now!</p>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</main>
+	<main id="SCM-REQUESTS-SCREEN" class="screens">
+		{% if CUser['privilege'] == "admin" %}
+			<h2>Organizations Requests</h2>
+			<ul class="table-container">
+				{% if ARequests %}
+					{% for Request in ARequests %}
+						<li class="table-cell">{{ GetDBItem("DeviceITSA", "device_uid", Request['device_id'])['name'] }}
+							<div>{{ Request['priority'] }}</div> 
+							<div>{{ GetDBItem("UserITSA", "id", Request['user_id'])['email'] }}</div>
+							<div>
+								<button><a style="color: var(--main-text); text-decoration: none;" href="/view-request/{{ Request['id'] }}">View</a></button> 
+								<button><a style="color: var(--main-text); text-decoration: none;" href="/delete-request/{{ Request['id'] }}">Delete</a></button>
+							</div>
+						</li>
+					{% endfor %}
+				{% else %}
+					<p align="center">No Requests for now!</p>
+				{% endif %}
+			</ul>
+		{% elif CUser['privilege'] == "staff" %}
+			<h2>Your Requests</h2>
+			<ul class="table-container">
+				{% if MyRequests %}
+					{% for Request in MyRequests %}
+						<li class="table-cell">{{ GetDBItem("DeviceITSA", "device_uid", Request['device_id'])['name'] }}
+							<div>{{ Request['priority'] }}</div> 
+							<div>{{ GetDBItem("UserITSA", "id", Request['user_id'])['email'] }}</div>
+							<div>
+								<button><a style="color: var(--main-text); text-decoration: none;" href="/view-request/{{ Request['id'] }}">View</a></button> 
+								<button><a style="color: var(--main-text); text-decoration: none;" href="/delete-request/{{ Request['id'] }}">Delete</a></button>
+							</div>
+						</li>
+					{% endfor %}
+				{% else %}
+					<p align="center">No Requests for now!</p>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</main>
+	<main id="SCM-MANAGE-STAFFS-SCREEN" class="screens">
+		<header style="display: grid; place-items: center; height: 200px;">
+			<img src="#">
+			<button id="onboard-staff-button" class="main-button">&plus; Onboard a Staff</button>
+		</header>
+		<div class="hr">&nbsp;</div>
+		<h2>Onboarded Staffs</h2>
+		<ul class="table-container">
+			{% if Staffs %}
+				{% for Staff in Staffs %}
+					<li class="table-cell">{{ Staff['name'] }}
+						<div>{{ GetStaffInfo(Staff['id'])['device_count'] }}</div> 
+						<div>{{ GetStaffInfo(Staff['id'])['email'] }}</div>
+						<div>
+							<button style="display: none;"><a style="color: var(--main-text); text-decoration: none;" href="/staff/{{ Staff['id'] }}">&nbsp;&nbsp;&nbsp;View&nbsp;&nbsp;</a></button> 
+							<button><a style="color: var(--main-text); text-decoration: none;" href="/remove-staff/{{ Staff['id'] }}/{{ Staff['email'] }} ">Remove</a></button>
+						</div>
+					</li>
+				{% endfor %}
+			{% else %}
+				<p align="center">No Onboarded Staffs for now!</p>
+			{% endif %}
+		</ul>
+	</main>
+
+<script type="text/javascript">
+	current_screen = {{ ScreenID }}
+</script>
+<script src="{{ url_for('static', filename='js/Screen_Manager.js') }}"></script>
+<script src="{{ url_for('static', filename='js/App.js') }}"></script>
+</body>
+</html>
